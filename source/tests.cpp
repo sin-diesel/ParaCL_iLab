@@ -90,3 +90,17 @@ void unit_test_6() {
     std::cout << "TEST 6 PASSED" << std::endl;
 
 }
+
+void unit_test_7() {
+    char buf[] = "if (((a != b))) {\n a = 0;\nb = a + 1 + ((  (c * 2204) + 1));\n }\n";
+
+    fprintf(stdout, "Running lexer...\n");
+    std::vector<Lexem*> lexems = lexer(buf);
+    fprintf(stdout, "Lexer is done.\n");
+    for (int i = 0; i < lexems.size(); ++i) {
+      lexems[i]->print();
+    }
+
+    std::cout << "TEST 7 PASSED" << std::endl;
+
+}

@@ -59,6 +59,14 @@ struct Decl:public Lexem {
     void print() const override;
 };
 
+struct Value:public Lexem {
+    int value;
+
+    Value() = delete;
+    Value(int val);
+    void print() const override;
+};
+
 std::vector<Lexem*> lexer(char* buf);
 
 Lexem* parse_token(const std::string token, const std::unordered_map<std::string, int>& map);
@@ -78,4 +86,7 @@ void unit_test_4();
 void unit_test_5();
 
 void unit_test_6();
+
+void unit_test_7();
+
 
