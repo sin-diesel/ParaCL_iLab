@@ -11,7 +11,7 @@
 
 enum tokens_t { BINOP, KEYWORD, ID, VALUE, CMP, LITERAL, SCOPE, BRAC,
 
- ASSIGN, ADD, SUB, MUL, DIV, LESS, GREATER, LESSEQ, GREQ, EQUAL,
+ ASSIGN, ADD, SUB, MUL, DIV, LESS, GREATER, LESSEQ, GREQ, NOTEQUAL, EQUAL,
 
  WHILE, IF, PRINT, IN, SEMICOL,
 
@@ -51,6 +51,14 @@ struct Brack:public Lexem {
     void print() const override;
 };
 
+struct Decl:public Lexem {
+    std::string* decl_;
+
+    Decl() = delete;
+    Decl(std::string* decl);
+    void print() const override;
+};
+
 std::vector<Lexem*> lexer(char* buf);
 
 Lexem* parse_token(const std::string token, const std::unordered_map<std::string, int>& map);
@@ -68,3 +76,6 @@ void unit_test_3();
 void unit_test_4();
 
 void unit_test_5();
+
+void unit_test_6();
+

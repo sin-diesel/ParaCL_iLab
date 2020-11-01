@@ -76,3 +76,17 @@ void unit_test_5() {
     std::cout << "TEST 5 PASSED" << std::endl;
 
 }
+
+void unit_test_6() {
+    char buf[] = "if (index != other_index) {\n index = other_index;\n other_index = ?; }; ";
+
+    fprintf(stdout, "Running lexer...\n");
+    std::vector<Lexem*> lexems = lexer(buf);
+    fprintf(stdout, "Lexer is done.\n");
+    for (int i = 0; i < lexems.size(); ++i) {
+      lexems[i]->print();
+    }
+
+    std::cout << "TEST 6 PASSED" << std::endl;
+
+}
