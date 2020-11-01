@@ -1,4 +1,4 @@
-#include "lexer.h"
+#include "../include/lexer.h"
 #include <string>
 #include <string.h>
 #include <iostream>
@@ -14,9 +14,24 @@ BinOP::BinOP(int kind):Lexem(BINOP) {
     binop_kind = kind;
 }
 
-void BinOP::print() const {
+KeyWord::KeyWord(int kind):Lexem(KEYWORD) {
+    keyword_kind = kind;
+}
 
-    fprintf(stdout, "\n\n\nBinOP lexem: %p\n\ttype: %d\n\n\n", this, binop_kind);
+Brack::Brack(int kind):Lexem(BRAC) {
+    brack_kind = kind;
+}
+
+void BinOP::print() const {
+    fprintf(stdout, "\n\n\nBinOP lexem: %p\n\ttype: %d\n\n\n", this, binop_kind); // fix
+}
+
+void KeyWord::print() const {
+    fprintf(stdout, "\n\n\nKeyWord lexem: %p\n\ttype: %d\n\n\n", this, keyword_kind); // fix
+}
+
+void Brack::print() const {
+    fprintf(stdout, "\n\n\nBrack lexem: %p\n\ttype: %d\n\n\n", this, brack_kind); // fix
 }
 
  //--------------- get tokens in vector
@@ -24,7 +39,7 @@ std::vector<std::string> extract_tokens(char* buf) {
     std::vector<std::string> tokens;
 
     //--------------- get single token
-    char* beginning = strtok(buf, " ");
+    char* beginning = strtok(buf, " \n");
     int size = strlen(beginning);
     std::string token(beginning, size);
 
@@ -32,11 +47,23 @@ std::vector<std::string> extract_tokens(char* buf) {
     tokens.push_back(token);
     
      //--------------- get remaining tokens
-    while ((beginning = strtok(NULL, " ")) != NULL) {
+    while ((beginning = strtok(NULL, " \n")) != NULL) {
        int size = strlen(beginning);
         token = std::string(beginning, size);
-        DBG(std::cout << "Token parsed: " << token << std::endl);
-        tokens.push_back(token);
+        char s = token.find(';');   // check for semicolon at the end of a token
+
+
+        if (s != -1) {
+            token = token.substr(0, token.size() - 1);
+            std::string semicolon = std::string(";");
+            DBG(std::cout << "Token parsed: " << token << std::endl);
+            DBG(std::cout << "Token parsed: " << semicolon << std::endl);
+            tokens.push_back(token);
+            tokens.push_back(semicolon);
+        } else {
+            DBG(std::cout << "Token parsed: " << token << std::endl);
+            tokens.push_back(token);
+        }
     }
     return tokens;
 }
@@ -56,12 +83,24 @@ std::unordered_map<std::string, int> set_operations() {
     operations.insert({"<=", LESSEQ});
     operations.insert({">=", GREQ});
 
+    operations.insert({"while", WHILE});
+    operations.insert({"if", IF});
+    operations.insert({"print", PRINT});
+    operations.insert({"?", IN});
+    operations.insert({";", SEMICOL});
+
+    operations.insert({"(", LBRAC});
+    operations.insert({")", RBRAC});
+
+    operations.insert({"{", SCOPE_BEG});
+    operations.insert({"}", SCOPE_END});
+
     return operations;
 }
 
  //--------------- parse token and return Lexem*
 Lexem* parse_token(const std::string token, const std::unordered_map<std::string, int>& map) {
-    BinOP* opt = nullptr;
+    Lexem* opt = nullptr;
 
     auto check = map.find(token);
     if (check == map.end()) {
@@ -70,14 +109,23 @@ Lexem* parse_token(const std::string token, const std::unordered_map<std::string
     }
 
     int op_kind = map.at(token); // here we are sure that key exists
-    BINOP_CREATE(opt, op_kind);
+    if (op_kind >= ASSIGN && op_kind <= EQUAL) {
+        BINOP_CREATE(opt, op_kind);
+    } else if (op_kind >= WHILE && op_kind <= SEMICOL) {
+        KWORD_CREATE(opt, op_kind);
+    } else if (op_kind >= SCOPE_BEG && op_kind <= RBRAC) {
+        BRAC_CREATE(opt, op_kind);
+    }
 
     assert(opt != nullptr);
     return opt;
 }
 
+
+
 //--------------- return vector of lexems
 std::vector<Lexem*> lexer(char* buf) {
+    
     unsigned size = strlen(buf);
     char* current = buf;
 

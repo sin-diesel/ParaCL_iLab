@@ -7,5 +7,6 @@ int main () {
     unit_test_2();
     unit_test_3();
     unit_test_4();
+    unit_test_5();
     return 0;
 }
