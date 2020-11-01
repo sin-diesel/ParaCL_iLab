@@ -78,7 +78,7 @@ void unit_test_5() {
 }
 
 void unit_test_6() {
-    char buf[] = "if (index != other_index) {\n index = other_index;\n other_index = ?; }; ";
+    char buf[] = "if ( (index * 2 + 3) != other_index) {\n index = other_index;\n other_index = ?; }; ";
 
     fprintf(stdout, "Running lexer...\n");
     std::vector<Lexem*> lexems = lexer(buf);
