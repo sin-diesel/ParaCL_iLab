@@ -1,17 +1,22 @@
+#pragma once
 #include <vector>
 #include <unordered_map>
 
 #define DEBUG true
 
-#define BINOP_CREATE(pointer, type) pointer = new BinOP(type); \
+#define BINOP_CREATE(pointer, type) pointer = new BinOP(type);
+#define KWORD_CREATE(pointer, type) pointer = new KeyWord(type); 
+#define BRAC_CREATE(pointer, type) pointer = new Brack(type); 
 
 #define DBG(expr) if (DEBUG) {expr;}
 
+enum tokens_t { BINOP, KEYWORD, ID, VALUE, CMP, LITERAL, SCOPE, BRAC,
 
-enum token_kind_t { BINOP, KEYWORD, ID, VALUE, CMP, LITERAL, SCOPE, BRAC, SEMICOL};
-enum binop_t { ASSIGN, ADD, SUB, MUL, DIV, LESS, GREATER, LESSEQ, GREQ, EQUAL };
-enum keywords_t { WHILE, IF, PRINT, IN };
-enum braces_t { SCOPE_BEG, SCOPE_END, LBRAC, RBRAC };
+ ASSIGN, ADD, SUB, MUL, DIV, LESS, GREATER, LESSEQ, GREQ, NOTEQUAL, EQUAL,
+
+ WHILE, IF, PRINT, IN, SEMICOL,
+
+ SCOPE_BEG, SCOPE_END, LBRAC, RBRAC };
 
 struct Lexem {
 public:
@@ -34,7 +39,32 @@ struct BinOP: public Lexem {
 struct KeyWord:public Lexem {
     int keyword_kind;
 
+    KeyWord() = delete;
     KeyWord(int keyword_kind);
+    void print() const override;
+};
+
+struct Brack:public Lexem {
+    int brack_kind;
+
+    Brack() = delete;
+    Brack(int brack);
+    void print() const override;
+};
+
+struct Decl:public Lexem {
+    std::string* decl_;
+
+    Decl() = delete;
+    Decl(std::string* decl);
+    void print() const override;
+};
+
+struct Value:public Lexem {
+    int value;
+
+    Value() = delete;
+    Value(int val);
     void print() const override;
 };
 
@@ -53,3 +83,11 @@ void unit_test_2();
 void unit_test_3();
 
 void unit_test_4();
+
+void unit_test_5();
+
+void unit_test_6();
+
+void unit_test_7();
+
+
