@@ -39,7 +39,7 @@ void Brack::print() const {
 }
 
 void Decl::print() const {
-    fprintf(stdout, "\nBrack lexem: %p\n\ttype: %d\n", this, ID); // fix
+    fprintf(stdout, "\nDecl lexem: %p\n\ttype: %d\n", this, ID); // fix
     std::cout << "Decl is: " << *decl_ << "\n";
 }
 
