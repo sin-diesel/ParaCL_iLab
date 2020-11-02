@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <string>
 #include <unordered_map>
 
 #define DEBUG true
@@ -16,11 +17,13 @@ enum tokens_t { BINOP, KEYWORD, ID, VALUE, CMP, LITERAL, SCOPE, BRAC,
 
  WHILE, IF, PRINT, IN, SEMICOL,
 
- SCOPE_BEG, SCOPE_END, LBRAC, RBRAC };
+ SCOPE_BEG, SCOPE_END, LBRAC, RBRAC,
+ CONNECTOR };
 
 struct Lexem {
 public:
     int token_kind;
+    Lexem* parent = nullptr;
 
     Lexem() = delete;
     Lexem(int kind);
@@ -30,6 +33,8 @@ public:
 
 struct BinOP: public Lexem {
     int binop_kind;
+    Lexem* lhs = nullptr;
+    Lexem* rhs = nullptr;
 
     BinOP() = delete;
     BinOP(int binop);
@@ -38,6 +43,8 @@ struct BinOP: public Lexem {
 
 struct KeyWord:public Lexem {
     int keyword_kind;
+    Lexem* lhs = nullptr;
+    Lexem* rhs = nullptr;
 
     KeyWord() = delete;
     KeyWord(int keyword_kind);

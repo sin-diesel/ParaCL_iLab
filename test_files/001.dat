@@ -1,0 +1,9 @@
+
+while (i < n_th + (3 + 2 * 4) ) {
+    i = i + 1;
+    res = first + second;
+    first = second;
+    second = res;
+}
+
+print res;
