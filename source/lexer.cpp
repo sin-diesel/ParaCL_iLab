@@ -3,6 +3,7 @@
 #include <string.h>
 #include <iostream>
 #include <assert.h>
+#include <errno.h>
 #include <vector>
 #include <unordered_map>
 
@@ -26,6 +27,10 @@ Decl::Decl(std::string* decl):Lexem(ID) {
     decl_ = decl;
 }
 
+Value::Value(int val):Lexem(VALUE) {
+    value = val;
+}
+
 void BinOP::print() const {
     fprintf(stdout, "\nBinOP lexem: %p\n\ttype: %d\n", this, binop_kind); // fix
 }
@@ -41,6 +46,11 @@ void Brack::print() const {
 void Decl::print() const {
     fprintf(stdout, "\nDecl lexem: %p\n\ttype: %d\n", this, ID); // fix
     std::cout << "Decl is: " << *decl_ << "\n";
+}
+
+void Value::print() const {
+    fprintf(stdout, "\nValue lexem: %p\n\ttype: %d\n", this, ID); // fix
+    std::cout << "Value is: " << value << "\n";
 }
 
  //--------------- get tokens in vector
@@ -59,11 +69,12 @@ std::vector<std::string> extract_tokens(char* buf) {
     while ((beginning = strtok(NULL, " \n")) != NULL) {
         int size = strlen(beginning);
         token = std::string(beginning, size);
-        char s = token.find(';');   // check for semicolon at the end of a token
+        
+        char sem = token.find(';');   // check for semicolon at the end of a token
         char lbr = token.find('('); // check for round brackets
         char rbr = token.find(')');
 
-        if (s != -1 && token.size() > 1) {
+        if (sem != -1 && token.size() > 1) {
             token = token.substr(0, token.size() - 1);
             std::string semicolon = std::string(";");
             DBG(std::cout << "Token parsed: " << token << std::endl);
@@ -131,7 +142,7 @@ Lexem* parse_token(const std::string token, const std::unordered_map<std::string
     auto check = map.find(token);
     if (check == map.end()) {
         fprintf(stdout, "Token not recognized!\n");
-        op_kind = ID; // possible ID
+        op_kind = ID; // possible id
         //exit(-1);
     }
 
@@ -145,8 +156,20 @@ Lexem* parse_token(const std::string token, const std::unordered_map<std::string
     } else if (op_kind >= SCOPE_BEG && op_kind <= RBRAC) {
         BRAC_CREATE(opt, op_kind);
     } else {
-        std::string* decl = new std::string(token);
-        opt = new Decl(decl);
+        char* p = nullptr;
+        int num = strtol(token.c_str(), &p, 10); // checking if a number
+        if (num != 0 || *(token.c_str()) == '0') {
+            op_kind = VALUE; // possible value
+            opt = new Value(num);
+        } else {
+        DBG(fprintf(stdout, "Number conversion failed:");
+            strerror(errno);
+            fprintf(stdout, "\n"))
+            std::string* decl = new std::string(token); // declaration
+            
+            op_kind = ID; // possible ID
+            opt = new Decl(decl);
+        }
     }
 
     assert(opt != nullptr);
