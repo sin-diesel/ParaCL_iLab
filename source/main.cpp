@@ -1,5 +1,6 @@
 #include <iostream>
-#include "../include/lexer.h"
+#include "lexer.h"
+#include "tests.h"
 
 int main () {
     
@@ -9,7 +10,10 @@ int main () {
     unit_test_4();
     unit_test_5();
     unit_test_6();
-    //unit_test_7();
+    unit_test_7();
+
+    //test();
+
 
     return 0;
 }

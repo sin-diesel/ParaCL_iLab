@@ -1,4 +1,5 @@
 #pragma once
+
 #include "lexer.h"
 
 #define CAST(dst, src, val) dst* val = static_cast<dst*>(src);

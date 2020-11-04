@@ -4,14 +4,19 @@
 
 static int next = 0;
 
+
+//--------------- get lexems tree head
 Parse_tree_t::Parse_tree_t(std::vector<Lexem*> lexems) {
     head = Get_statement(lexems);
 }
 
+
+//--------------- get statement
 Lexem* Get_statement(std::vector<Lexem*> lexems) {
     Lexem* statement = nullptr;
     KeyWord* key = nullptr;
     
+    //--------------- statement can be either a keyword, or assignment of ID to ID/value
     switch (lexems[next]->token_kind) {
 
         case KEYWORD: {
@@ -42,6 +47,7 @@ Lexem* Get_statement(std::vector<Lexem*> lexems) {
     return statement;
 }
 
+//--------------- either a expression or ID/VALUE
 Lexem* Get_term(std::vector<Lexem*> lexems) {
     Lexem* lhs = nullptr;
     Lexem* rhs = nullptr;
@@ -102,13 +108,8 @@ Lexem* Get_expression(std::vector<Lexem*> lexems) {
     BinOP* op = nullptr;
 
     BinOP* lex = nullptr;
-
-    //assert(lexems[next]->token_kind == BRAC);
-    //++next;
     DBG(lexems[next]->print();)
 
-    // switch (lexems[next]->token_kind) {
-        //case BRAC: {
             lhs = Get_mult(lexems);
             //assert(lexems[next]->token_kind == BINOP);
             if (lexems[next]->token_kind == BINOP) {
@@ -122,22 +123,10 @@ Lexem* Get_expression(std::vector<Lexem*> lexems) {
             }
             op->lhs = lhs;
             op->rhs = rhs;
-            //assert(lexems[next]->token_kind == BRAC);
-     //   break;
-      //  }
-        //case ID: {
-        //    lhs = Get_ID(lexems);
-            //assert(lexems[next]->token_kind == BINOP);
-        //    break;
-       // }
-        // break;
-        // case VALUE:
-        // break;
-        // default:
-        //     fprintf(stdout, "Parser failure!");
-   // }
+
 }
 
+//--------------- get identifier
 Lexem* Get_ID(std::vector<Lexem*> lexems) {
     Decl* op = static_cast<Decl*>(lexems[next]);
     std::string* identifier = op->decl_;
@@ -146,6 +135,7 @@ Lexem* Get_ID(std::vector<Lexem*> lexems) {
     return id;
 }
 
+//--------------- get scope
 Lexem* Get_scope(std::vector<Lexem*> lexems) {
     KeyWord* scope = new KeyWord(SCOPE);
     scope->lhs = Get_statement(lexems);
@@ -154,6 +144,7 @@ Lexem* Get_scope(std::vector<Lexem*> lexems) {
 }
 
 
+//--------------- get integer value
 Lexem* Get_value(std::vector<Lexem*> lexems) {
     CAST(Value, lexems[next], num);
     int number = num->value;
