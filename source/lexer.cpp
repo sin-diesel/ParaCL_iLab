@@ -1,4 +1,4 @@
-#include "../include/lexer.h"
+#include "lexer.h"
 #include <string>
 #include <string.h>
 #include <iostream>
@@ -162,9 +162,7 @@ Lexem* parse_token(const std::string token, const std::unordered_map<std::string
             op_kind = VALUE; // possible value
             opt = new Value(num);
         } else {
-        DBG(fprintf(stdout, "Number conversion failed:");
-            strerror(errno);
-            fprintf(stdout, "\n"))
+        DBG(fprintf(stdout, "Number conversion failed\n"));
             std::string* decl = new std::string(token); // declaration
             
             op_kind = ID; // possible ID
