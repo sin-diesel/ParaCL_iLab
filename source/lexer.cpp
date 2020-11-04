@@ -1,4 +1,5 @@
 #include "lexer.h"
+#include "parser.h"
 #include <string>
 #include <string.h>
 #include <iostream>
@@ -35,12 +36,73 @@ void BinOP::print() const {
     fprintf(stdout, "\nBinOP lexem: %p\n\ttype: %d\n", this, binop_kind); // fix
 }
 
+int BinOP::get_type() const {
+    return binop_kind;
+}
+
+void BinOP::print_dot(FILE* dot_file) {
+
+    CAST(BinOP, this, lex)
+
+    if (lex->lhs != nullptr) {
+    fprintf (dot_file, "\n\t\t\"%d\"[shape = \"ellipse\", \
+                color=\"#191970\", style=\"filled\", fillcolor = \"#E0FFFF\"];\n" \
+                "\t\t\"%d\"->\"%d\"\n", lex->token_kind, lex->token_kind, (lex->lhs)->token_kind);
+
+    (lex->lhs)->print_dot(dot_file);
+
+    }
+    
+    if (lex->rhs != nullptr) {
+        fprintf (dot_file, "\n\t\t\"%d\"[shape = \"ellipse\", \
+                color=\"#191970\", style=\"filled\", fillcolor = \"#E0FFFF\"];\n" \
+                "\t\t\"%d\"->\"%d\"\n", lex->token_kind, lex->token_kind, (lex->rhs)->token_kind);
+
+        (lex->rhs)->print_dot(dot_file);
+    }
+}
+
 void KeyWord::print() const {
     fprintf(stdout, "\nKeyWord lexem: %p\n\ttype: %d\n", this, keyword_kind); // fix
 }
 
+void KeyWord::print_dot(FILE* dot_file) {
+
+    CAST(KeyWord, this, lex)
+
+    if (lex->lhs != nullptr) {
+    fprintf (dot_file, "\n\t\t\"%d\"[shape = \"ellipse\", \
+                color=\"#191970\", style=\"filled\", fillcolor = \"#E0FFFF\"];\n" \
+                "\t\t\"%d\"->\"%d\"\n", lex->token_kind, lex->token_kind, (lex->lhs)->token_kind);
+
+    (lex->lhs)->print_dot(dot_file);
+
+    }
+    
+    if (lex->rhs != nullptr) {
+        fprintf (dot_file, "\n\t\t\"%d\"[shape = \"ellipse\", \
+                color=\"#191970\", style=\"filled\", fillcolor = \"#E0FFFF\"];\n" \
+                "\t\t\"%d\"->\"%d\"\n", lex->token_kind, lex->token_kind, (lex->rhs)->token_kind);
+
+        (lex->rhs)->print_dot(dot_file);
+    }
+}
+
+int KeyWord::get_type() const {
+    return keyword_kind;
+}
+
+
 void Brack::print() const {
     fprintf(stdout, "\nBrack lexem: %p\n\ttype: %d\n", this, brack_kind); // fix
+}
+
+void Brack::print_dot(FILE* dot_file) {
+    return;
+}
+
+int Brack::get_type() const {
+    return brack_kind;
 }
 
 void Decl::print() const {
@@ -48,9 +110,25 @@ void Decl::print() const {
     std::cout << "Decl is: " << *decl_ << "\n";
 }
 
+void Decl::print_dot(FILE* dot_file) {
+    return;
+}
+
+int Decl::get_type() const {
+    return ID;
+}
+
 void Value::print() const {
     fprintf(stdout, "\nValue lexem: %p\n\ttype: %d\n", this, ID); // fix
     std::cout << "Value is: " << value << "\n";
+}
+
+void Value::print_dot(FILE* dot_file) {
+    return;
+}
+
+int Value::get_type() const {
+    return value;
 }
 
  //--------------- get tokens in vector

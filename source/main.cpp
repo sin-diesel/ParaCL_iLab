@@ -12,7 +12,7 @@ int main () {
     unit_test_6();
     unit_test_7();
 
-    //test();
+    test();
 
 
     return 0;

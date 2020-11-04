@@ -29,6 +29,8 @@ public:
     Lexem() = delete;
     Lexem(int kind);
     virtual void print() const = 0;
+    virtual void print_dot(FILE* dot_file) = 0;
+    virtual int get_type() const = 0;
     virtual ~Lexem() {};
 };
 
@@ -40,6 +42,8 @@ struct BinOP: public Lexem {
     BinOP() = delete;
     BinOP(int binop);
     void print() const override;
+    void print_dot(FILE* dot_file) override;
+    int get_type() const override;
 };
 
 struct KeyWord:public Lexem {
@@ -50,6 +54,8 @@ struct KeyWord:public Lexem {
     KeyWord() = delete;
     KeyWord(int keyword_kind);
     void print() const override;
+    void print_dot(FILE* dot_file) override;
+    int get_type() const override;
 };
 
 struct Brack:public Lexem {
@@ -58,6 +64,8 @@ struct Brack:public Lexem {
     Brack() = delete;
     Brack(int brack);
     void print() const override;
+    void print_dot(FILE* dot_file) override;
+    int get_type() const override;
 };
 
 struct Decl:public Lexem {
@@ -66,6 +74,8 @@ struct Decl:public Lexem {
     Decl() = delete;
     Decl(std::string* decl);
     void print() const override;
+    void print_dot(FILE* dot_file) override;
+    int get_type() const override;
 };
 
 struct Value:public Lexem {
@@ -74,6 +84,8 @@ struct Value:public Lexem {
     Value() = delete;
     Value(int val);
     void print() const override;
+    void print_dot(FILE* dot_file) override;
+    int get_type() const override;
 };
 
 std::vector<Lexem*> lexer(char* buf);

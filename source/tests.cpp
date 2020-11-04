@@ -108,7 +108,7 @@ void unit_test_7() {
 
 void test() {
 
-    FILE* input = fopen("./test_files/001.dat", "rb");
+    FILE* input = fopen("./tests/001.dat", "rb");
     assert(input != NULL);
 
     
@@ -132,6 +132,14 @@ void test() {
 
     Parse_tree_t tree(lexems);
 
+    // FILE* dot_file = fopen("dot_file.dot", "w");
+    // assert(dot_file != NULL);
+
+    //fprintf(dot_file, "digraph {\n\t node[shape = \"octagon\", color = \"#191970\", fontsize = 12, style = \"filled\", fillcolor = \"#87CEFA\"]; \n\t edge[color = \"#191970\", fontsize = 14];\n\t");
+
+    //tree.head->print_dot(dot_file);
+
+    //fclose(dot_file);
     fclose(input);
     free(buf);
 
