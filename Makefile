@@ -6,11 +6,11 @@ OBJ_DIR = obj
 SOURCES = lexer.cpp main.cpp tests.cpp parser.cpp
 HEADERS = lexer.h tests.h parser.h
 OBJECTS = $(SOURCES:.cpp=.o)
+EXECUTABLES = $(SOURCES:.cpp=)
 
 .PHONY: all
 all: $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $(OBJECTS) -o compiler
-	# mv $(OBJECTS) $(OBJ_DIR)
 
 lexer.o:
 	$(CXX) $(CXXFLAGS) $(SRC_DIR)/lexer.cpp -c -o lexer.o
@@ -24,6 +24,9 @@ tests.o:
 parser.o:
 	$(CXX) $(CXXFLAGS) $(SRC_DIR)/parser.cpp -c -o parser.o
 
+lexer: lexer.o main.o tests.o
+	$(CXX) $(CXXFLAGS) lexer.o main.o tests.o -o lexer
+
 .PHONY: clean
 clean:
-	rm $(OBJECTS)
+	rm $(OBJECTS) $(EXECUTABLES)
