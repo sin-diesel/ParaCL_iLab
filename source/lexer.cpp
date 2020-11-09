@@ -1,5 +1,4 @@
 #include "lexer.h"
-//#include "parser.h"
 #include <string>
 #include <string.h>
 #include <iostream>
@@ -8,38 +7,34 @@
 #include <vector>
 #include <unordered_map>
 
+
+/* TODO: 1) implement error checking in lexer
+        2) fix unordered map implementation*/
+
 Token::Token(int kind, const std::unordered_map<int, std::string>* map) {
     token_kind = kind;
 
-    auto check = map->find(kind);
-    if (check == map->end()) {
-        fprintf(stdout, "lexem not recognized!\n");
-    }
+    if (kind != ID && kind != VALUE) {
+        auto check = map->find(kind);
+        if (check == map->end()) {
+            fprintf(stdout, "lexem not recognized!\n");
+        }
 
-    std::string str = map->at(kind); // here we are sure key exists
-    std::string* id = new std::string(str);
-    token_str = id;
+        std::string str = map->at(kind); // here we are sure key exists
+        std::string* id = new std::string(str);
+        token_str = id;
+    } else if (kind == ID) {
+        std::string* id = new std::string("Identifier");
+        token_str = id;
+    } else if (kind == VALUE) {
+        std::string* value = new std::string("Value");
+        token_str = value;
+    }
 }
 
 void Token::print() {
     std::cout << "Token: " << *token_str << std::endl;
 }
-
-// Lexem::Lexem(int kind) {
-//     lexem_kind = kind;
-// }
-
-// BinOP::BinOP(int kind):Lexem(BINOP) {
-//     binop_kind = kind;
-// }
-
-// KeyWord::KeyWord(int kind):Lexem(KEYWORD) {
-//     keyword_kind = kind;
-// }
-
-// Brack::Brack(int kind):Lexem(BRAC) {
-//     brack_kind = kind;
-// }
 
 Word::Word(std::string* word, int token_kind, const std::unordered_map<int, std::string>* map):Token(token_kind, map) {
     word_ = word;
@@ -48,105 +43,6 @@ Word::Word(std::string* word, int token_kind, const std::unordered_map<int, std:
 Value::Value(int value, const std::unordered_map<int, std::string>* map):Token(VALUE, map) {
     value_ = value;
 }
-
-// void BinOP::print() const {
-//     fprintf(stdout, "\nBinOP lexem: %p\n\ttype: %d\n", this, binop_kind); // fix
-// }
-
-// int BinOP::get_type() const {
-//     return binop_kind;
-// }
-
-// void BinOP::print_dot(FILE* dot_file) {
-
-//     CAST(BinOP, this, lex)
-
-//     if (lex->lhs != nullptr) {
-//     fprintf (dot_file, "\n\t\t\"%d\"[shape = \"ellipse\", \
-//                 color=\"#191970\", style=\"filled\", fillcolor = \"#E0FFFF\"];\n" \
-//                 "\t\t\"%d\"->\"%d\"\n", lex->token_kind, lex->token_kind, (lex->lhs)->token_kind);
-
-//     (lex->lhs)->print_dot(dot_file);
-
-//     }
-    
-//     if (lex->rhs != nullptr) {
-//         fprintf (dot_file, "\n\t\t\"%d\"[shape = \"ellipse\", \
-//                 color=\"#191970\", style=\"filled\", fillcolor = \"#E0FFFF\"];\n" \
-//                 "\t\t\"%d\"->\"%d\"\n", lex->token_kind, lex->token_kind, (lex->rhs)->token_kind);
-
-//         (lex->rhs)->print_dot(dot_file);
-//     }
-// }
-
-// void KeyWord::print() const {
-//     fprintf(stdout, "\nKeyWord lexem: %p\n\ttype: %d\n", this, keyword_kind); // fix
-// }
-
-// void KeyWord::print_dot(FILE* dot_file) {
-
-//     CAST(KeyWord, this, lex)
-
-//     if (lex->lhs != nullptr) {
-//     fprintf (dot_file, "\n\t\t\"%d\"[shape = \"ellipse\", \
-//                 color=\"#191970\", style=\"filled\", fillcolor = \"#E0FFFF\"];\n" \
-//                 "\t\t\"%d\"->\"%d\"\n", lex->token_kind, lex->token_kind, (lex->lhs)->token_kind);
-
-//     (lex->lhs)->print_dot(dot_file);
-
-//     }
-    
-//     if (lex->rhs != nullptr) {
-//         fprintf (dot_file, "\n\t\t\"%d\"[shape = \"ellipse\", \
-//                 color=\"#191970\", style=\"filled\", fillcolor = \"#E0FFFF\"];\n" \
-//                 "\t\t\"%d\"->\"%d\"\n", lex->token_kind, lex->token_kind, (lex->rhs)->token_kind);
-
-//         (lex->rhs)->print_dot(dot_file);
-//     }
-// }
-
-// int KeyWord::get_type() const {
-//     return keyword_kind;
-// }
-
-
-// void Brack::print() const {
-//     fprintf(stdout, "\nBrack lexem: %p\n\ttype: %d\n", this, brack_kind); // fix
-// }
-
-// void Brack::print_dot(FILE* dot_file) {
-//     return;
-// }
-
-// int Brack::get_type() const {
-//     return brack_kind;
-// }
-
-// void Decl::print() const {
-//     fprintf(stdout, "\nDecl lexem: %p\n\ttype: %d\n", this, ID); // fix
-//     std::cout << "Decl is: " << *decl_ << "\n";
-// }
-
-// void Decl::print_dot(FILE* dot_file) {
-//     return;
-// }
-
-// int Decl::get_type() const {
-//     return ID;
-// }
-
-// void Value::print() const {
-//     fprintf(stdout, "\nValue lexem: %p\n\ttype: %d\n", this, ID); // fix
-//     std::cout << "Value is: " << value << "\n";
-// }
-
-// void Value::print_dot(FILE* dot_file) {
-//     return;
-// }
-
-// int Value::get_type() const {
-//     return value;
-// }
 
  //--------------- get lexems in vector
 std::vector<std::string> extract_lexems(char* buf) {
@@ -311,9 +207,6 @@ Token* parse_lexem(const std::string lexem, const std::unordered_map<std::string
 //--------------- return vector of lexems
 std::vector<Token*> lexer(char* buf) {
     
-    unsigned size = strlen(buf);
-    char* current = buf;
-
     std::vector<Token*> tokens;
 
     std::unordered_map<std::string, int> token_types = set_token_types();

@@ -17,7 +17,7 @@ ASSIGN, ADD, SUB, MUL, DIV, LESS, GREATER, LESSEQ, GREQ, NOTEQUAL, EQUAL,
 
 WHILE, IF, PRINT, IN,
 
-LBRAC, RBRAC, RSBRAC, LSBRAC, SEMICOL,
+LBRAC, RBRAC, RSBRAC, LSBRAC, SEMICOL, END
 
 };
 
@@ -27,47 +27,10 @@ public:
     std::string* token_str;
 
     Token(int kind, const std::unordered_map<int, std::string>* map_tostr);
+    //Token(int kind, std::string* word); // constructors for creating such identifiers values
     virtual void print();
 };
 
-//     int token_kind;
-//     Lexem* parent = nullptr;
-
-//     Lexem() = delete;
-//     Lexem(int kind);
-//     virtual void print() const = 0;
-//     virtual void print_dot(FILE* dot_file) = 0;
-//     virtual int get_type() const = 0;
-//     virtual ~Lexem() {};
-// };
-
-// struct BinOP: public Token {
-//     int binop_kind;
-
-//     BinOP(int binop);
-// };
-
-// struct KeyWord:public Lexem {
-//     int keyword_kind;
-//     Lexem* lhs = nullptr;
-//     Lexem* rhs = nullptr;
-
-//     KeyWord() = delete;
-//     KeyWord(int keyword_kind);
-//     void print() const override;
-//     void print_dot(FILE* dot_file) override;
-//     int get_type() const override;
-// };
-
-// struct Brack:public Lexem {
-//     int brack_kind;
-
-//     Brack() = delete;
-//     Brack(int brack);
-//     void print() const override;
-//     void print_dot(FILE* dot_file) override;
-//     int get_type() const override;
-// };
 
 struct Word:public Token {
     std::string* word_;

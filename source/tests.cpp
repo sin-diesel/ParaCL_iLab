@@ -1,11 +1,14 @@
 #include "lexer.h"
-//#include "parser.h"
 #include <string>
 #include <assert.h>
 #include <string.h>
 #include <iostream>
 
+#define TEST_BEGIN(num) fprintf(stdout, "\n\n\n UNIT TEST" #num  "\n");
+#define TEST_END(num) fprintf(stdout, "\n\n\n TEST"  #num  "PASSED\n");
+
 void unit_test_1() {
+    TEST_BEGIN(1)
     char buf[] = "+ - = <= > <";
     std::vector<std::string> lexems = extract_lexems(buf);
 
@@ -14,10 +17,11 @@ void unit_test_1() {
         std::cout << lexems[i] << std::endl;
     });
 
-    std::cout << "TEST 1 PASSED" << std::endl;
+    TEST_END(1)
 }
 
 void unit_test_2() {
+    TEST_BEGIN(2)
     std::unordered_map<std::string, int> token_types = set_token_types();
 
     std::string add("+");
@@ -31,20 +35,22 @@ void unit_test_2() {
     iter = token_types.find(invalid);
     assert(iter == token_types.end());
 
-    std::cout << "TEST 2 PASSED" << std::endl;
+    TEST_END(2)
 }
 
 void unit_test_3() {
+    TEST_BEGIN(3)
     char buf[] = "+ - = <= > <";
     fprintf(stdout, "Running lexer...\n");
     std::vector<Token*> tokens = lexer(buf);
     for (int i = 0; i < tokens.size(); ++i) {
         tokens[i]->print();
     }
-    std::cout << "TEST 3 PASSED" << std::endl;
+    TEST_END(3)
 }
 
 void unit_test_4() {
+    TEST_BEGIN(4)
     char buf[] = "+ - == == = <= > < while if ?  =";
     //std::vector<std::string> tokens = extract_tokens(buf);
 
@@ -55,11 +61,12 @@ void unit_test_4() {
         tokens[i]->print();
     }
 
-    std::cout << "TEST 4 PASSED" << std::endl;
+    TEST_END(4)
 
 }
 
 void unit_test_5() {
+    TEST_BEGIN(5)
     char buf[] = "if ( );\n{ \n};";
 
     fprintf(stdout, "Running lexer...\n");
@@ -71,11 +78,12 @@ void unit_test_5() {
         tokens[i]->print();
     }
 
-    std::cout << "TEST 5 PASSED" << std::endl;
+    TEST_END(5)
 
 }
 
 void unit_test_6() {
+    TEST_BEGIN(6)
     char buf[] = "if ( (index * 2 + 3) != other_index) {\n index = other_index;\n other_index = ?; }; ";
 
     fprintf(stdout, "Running lexer...\n");
@@ -85,7 +93,7 @@ void unit_test_6() {
       tokens[i]->print();
     }
 
-    std::cout << "TEST 6 PASSED" << std::endl;
+    TEST_END(6)
 
 }
 
@@ -103,41 +111,48 @@ void unit_test_7() {
 
 }
 
-// void test() {
+void unit_test_8() {
+    
+}
 
-//     FILE* input = fopen("./tests/001.dat", "rb");
-//     assert(input != NULL);
+void test() {
+
+    FILE* input = fopen("./tests/001.dat", "rb");
+    assert(input != NULL);
 
     
 
-//     int end = fseek(input, 0L, SEEK_END);
-//     int size = ftell(input);
-//     rewind(input);
-//     fprintf(stdout, "File size: %d\n", size);
+    int end = fseek(input, 0L, SEEK_END);
+    int size = ftell(input);
+    rewind(input);
+    fprintf(stdout, "File size: %d\n", size);
 
-//     char* buf = (char*) calloc(size, sizeof(char));
-//     int read = fread(buf, sizeof(char), size, input);
-//     fprintf(stdout, "Read:%d\n", read);
-//     assert(read == size);
-//     fprintf(stdout, "Buf:%s\n", buf);
+    char* buf = (char*) calloc(size, sizeof(char));
+    int read = fread(buf, sizeof(char), size, input);
+    fprintf(stdout, "Read:%d\n", read);
+    assert(read == size);
+    fprintf(stdout, "Buf:%s\n", buf);
 
-//     std::vector<Lexem*> lexems = lexer(buf);
+    std::cout << "Testing lexer..." << std::endl;
+    std::vector<Token*> tokens = lexer(buf);
 
-//     for (int i = 0; i < lexems.size(); ++i) {
-//         lexems[i]->print();
-//     }
+    for (int i = 0; i < tokens.size(); ++i) {
+        tokens[i]->print();
+    }
 
-//     Parse_tree_t tree(lexems);
+    std::cout << "Testing complete.\n\n\n";
 
-//     // FILE* dot_file = fopen("dot_file.dot", "w");
-//     // assert(dot_file != NULL);
+    //Parse_tree_t tree(lexems);
 
-//     //fprintf(dot_file, "digraph {\n\t node[shape = \"octagon\", color = \"#191970\", fontsize = 12, style = \"filled\", fillcolor = \"#87CEFA\"]; \n\t edge[color = \"#191970\", fontsize = 14];\n\t");
+    // FILE* dot_file = fopen("dot_file.dot", "w");
+    // assert(dot_file != NULL);
 
-//     //tree.head->print_dot(dot_file);
+    //fprintf(dot_file, "digraph {\n\t node[shape = \"octagon\", color = \"#191970\", fontsize = 12, style = \"filled\", fillcolor = \"#87CEFA\"]; \n\t edge[color = \"#191970\", fontsize = 14];\n\t");
 
-//     //fclose(dot_file);
-//     fclose(input);
-//     free(buf);
+    //tree.head->print_dot(dot_file);
 
-// }
+    //fclose(dot_file);
+    fclose(input);
+    free(buf);
+
+}

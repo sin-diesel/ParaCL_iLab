@@ -1,10 +1,23 @@
+n = 0;
+a = 0;
+b = 1;
+x = ?;
 
-while (i < n_th + (3 + 2 * 4) ) {
-    i = i + 1;
-    res = first + second;
-    first = second;
-    second = res;
+while (n < x) {
+  n = n + 1;
 
-    print res;
-    
+  if (n == 1) {
+    print a;
+    }
+
+  if (n == 2) {
+    print b;
+    }
+
+  if (n > 2) {
+    tmp = b;
+    b = a + b;
+    a = tmp;
+    print b;
+  }
 }
