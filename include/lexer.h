@@ -24,7 +24,7 @@ LBRAC, RBRAC, RSBRAC, LSBRAC, SEMICOL, END
 struct Token {
 public:
     int token_kind;
-    std::string* token_str;
+    std::string token_str;
 
     Token(int kind, const std::unordered_map<int, std::string>* map_tostr);
     //Token(int kind, std::string* word); // constructors for creating such identifiers values
@@ -33,13 +33,13 @@ public:
 
 
 struct Word:public Token {
-    std::string* word_;
-    Word(std::string* word, int token_kind, const std::unordered_map<int, std::string>* map_tostr);
+    std::string m_word;
+    Word(std::string word, int token_kind, const std::unordered_map<int, std::string>* map_tostr);
     //void print();
 };
 
 struct Value:public Token {
-    int value_;
+    int m_value;
     Value(int value, const std::unordered_map<int, std::string>* map_tostr);
     //void print();
 };

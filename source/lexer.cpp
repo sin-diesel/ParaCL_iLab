@@ -21,27 +21,27 @@ Token::Token(int kind, const std::unordered_map<int, std::string>* map) {
         }
 
         std::string str = map->at(kind); // here we are sure key exists
-        std::string* id = new std::string(str);
-        token_str = id;
+       // std::string* id = new std::string(str);
+        token_str = str;
     } else if (kind == ID) {
-        std::string* id = new std::string("Identifier");
-        token_str = id;
+       // std::string* id = new std::string("Identifier");
+        token_str = "Identifier";
     } else if (kind == VALUE) {
-        std::string* value = new std::string("Value");
-        token_str = value;
+        //std::string* value = new std::string("Value");
+        token_str = "Value";
     }
 }
 
 void Token::print() {
-    std::cout << "Token: " << *token_str << std::endl;
+    std::cout << "Token: " << token_str << std::endl;
 }
 
-Word::Word(std::string* word, int token_kind, const std::unordered_map<int, std::string>* map):Token(token_kind, map) {
-    word_ = word;
+Word::Word(std::string word, int token_kind, const std::unordered_map<int, std::string>* map):Token(token_kind, map) {
+    m_word = word;
 }
 
 Value::Value(int value, const std::unordered_map<int, std::string>* map):Token(VALUE, map) {
-    value_ = value;
+    m_value = value;
 }
 
  //--------------- get lexems in vector
@@ -192,9 +192,9 @@ Token* parse_lexem(const std::string lexem, const std::unordered_map<std::string
         } else {
 
         DBG(fprintf(stdout, "Number conversion failed\n"));
-        std::string* id = new std::string(lexem); // here we identifited it is an ID
+        //std::string* id = new std::string(lexem); // here we identifited it is an ID
         token_kind = ID; 
-        token = new Word(id, ID, map_tostr);
+        token = new Word(lexem, ID, map_tostr);
         }
     }
 
