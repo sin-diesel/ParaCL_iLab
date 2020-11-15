@@ -1,4 +1,5 @@
 #include "lexer.h"
+#include "tests.h"
 #include <string>
 #include <string.h>
 #include <iostream>
@@ -32,16 +33,35 @@ Token::Token(int kind, const std::unordered_map<int, std::string>* map) {
     }
 }
 
-void Token::print() {
+void Token::print() const {
     std::cout << "Token: " << token_str << std::endl;
+}
+
+Token::Token(Token* token) {
+    token_kind = token->token_kind;
+    token_str = token->token_str;
 }
 
 Word::Word(std::string word, int token_kind, const std::unordered_map<int, std::string>* map):Token(token_kind, map) {
     m_word = word;
 }
 
+Word::Word(Token* token) {
+    token_kind = token->token_kind;
+    token_str = token->token_str;
+    Word* word = static_cast<Word*>(token);
+    m_word = word->m_word;
+}
+
 Value::Value(int value, const std::unordered_map<int, std::string>* map):Token(VALUE, map) {
     m_value = value;
+}
+
+Value::Value(Token* token) {
+    token_kind = token->token_kind;
+    token_str = token->token_str;
+    Value* value = static_cast<Value*>(token);
+    m_value = value->m_value;
 }
 
  //--------------- get lexems in vector

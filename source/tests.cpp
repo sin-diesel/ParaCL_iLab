@@ -1,11 +1,13 @@
 #include "lexer.h"
+#include "parser.h"
+#include "tests.h"
 #include <string>
 #include <assert.h>
 #include <string.h>
 #include <iostream>
 
-#define TEST_BEGIN(num) fprintf(stdout, "\n\n\n UNIT TEST" #num  "\n");
-#define TEST_END(num) fprintf(stdout, "\n\n\n TEST"  #num  "PASSED\n");
+#define TEST_BEGIN(num) fprintf(stdout, "\n\n\n UNIT TEST " #num  "\n");
+#define TEST_END(num) fprintf(stdout, "\n\n\n TEST "  #num  " PASSED\n");
 
 void unit_test_1() {
     TEST_BEGIN(1)
@@ -112,7 +114,41 @@ void unit_test_7() {
 }
 
 void unit_test_8() {
-    
+    TEST_BEGIN(8)
+    char buf[] = "if (((a != b))) {\n a = 0;\nb = a + 1 + ((  (c * 2204) + 1));\n }\n";
+
+    fprintf(stdout, "Running lexer...\n");
+    std::vector<Token*> tokens = lexer(buf);
+    fprintf(stdout, "Lexer is done.\n");
+
+    Parse_tree_t tree;
+    Token* tok1 = tokens[0];
+    Token* tok2 = tokens[1];
+    Token* tok3 = tokens[2];
+    BinOP_t* head = new BinOP_t(tok1);
+    tree.head = head;
+    tree.head->print();
+
+    Node_t* left = head->get_left_node();
+    left = new BinOP_t(tok2);
+    left->print();
+
+    TEST_END(8)
+}
+
+
+
+void unit_test_9() {
+    TEST_BEGIN(8)
+    char buf[] = "a + 2 * (4 + 3) ";
+
+    fprintf(stdout, "Running lexer...\n");
+    std::vector<Token*> tokens = lexer(buf);
+    fprintf(stdout, "Lexer is done.\n");
+
+    Node_t* head = get_expr(tokens);
+    head->tree_ltraverse();
+    TEST_END(9)
 }
 
 void test() {
@@ -142,16 +178,6 @@ void test() {
 
     std::cout << "Testing complete.\n\n\n";
 
-    //Parse_tree_t tree(lexems);
-
-    // FILE* dot_file = fopen("dot_file.dot", "w");
-    // assert(dot_file != NULL);
-
-    //fprintf(dot_file, "digraph {\n\t node[shape = \"octagon\", color = \"#191970\", fontsize = 12, style = \"filled\", fillcolor = \"#87CEFA\"]; \n\t edge[color = \"#191970\", fontsize = 14];\n\t");
-
-    //tree.head->print_dot(dot_file);
-
-    //fclose(dot_file);
     fclose(input);
     free(buf);
 
