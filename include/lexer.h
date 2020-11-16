@@ -4,110 +4,65 @@
 #include <string>
 #include <unordered_map>
 
-#define DEBUG true
+//------------------- Debug mode switch
 
-#define BINOP_CREATE(pointer, type) pointer = new BinOP(type);
-#define KWORD_CREATE(pointer, type) pointer = new KeyWord(type); 
-#define BRAC_CREATE(pointer, type) pointer = new Brack(type); 
+#ifdef DEBUG
+#undef DEBUG
+#endif
+
+#define DEBUG false
 
 #define DBG(expr) if (DEBUG) {expr;}
 
-enum tokens_t { BINOP, KEYWORD, ID, VALUE, CMP, LITERAL, SCOPE, BRAC,
+//------------------- All lexems present in grammar
+enum lexems_t { ID, VALUE,
 
- ASSIGN, ADD, SUB, MUL, DIV, LESS, GREATER, LESSEQ, GREQ, NOTEQUAL, EQUAL,
+ASSIGN, ADD, SUB, MUL, DIV, LESS, GREATER, LESSEQ, GREQ, NOTEQUAL, EQUAL,
 
- WHILE, IF, PRINT, IN, SEMICOL,
+WHILE, IF, PRINT, IN,
 
- SCOPE_BEG, SCOPE_END, LBRAC, RBRAC,
- CONNECTOR };
+LBRAC, RBRAC, RSBRAC, LSBRAC, SEMICOL, END, STMT,
 
-struct Lexem {
+};
+
+
+struct Token {
 public:
     int token_kind;
-    Lexem* parent = nullptr;
+    std::string token_str;
 
-    Lexem() = delete;
-    Lexem(int kind);
-    virtual void print() const = 0;
-    virtual void print_dot(FILE* dot_file) = 0;
-    virtual int get_type() const = 0;
-    virtual ~Lexem() {};
+    Token(int kind, const std::unordered_map<int, std::string>* map_tostr);
+    Token(Token* token);
+    Token() = default;
+    //Token(int kind, std::string* word); // constructors for creating such identifiers values
+    virtual void print() const;
 };
 
-struct BinOP: public Lexem {
-    int binop_kind;
-    Lexem* lhs = nullptr;
-    Lexem* rhs = nullptr;
 
-    BinOP() = delete;
-    BinOP(int binop);
-    void print() const override;
-    void print_dot(FILE* dot_file) override;
-    int get_type() const override;
+struct Word:public Token {
+    std::string m_word;
+
+    Word(Token* token);
+    Word(std::string word, int token_kind, const std::unordered_map<int, std::string>* map_tostr);
+    //void print();
 };
 
-struct KeyWord:public Lexem {
-    int keyword_kind;
-    Lexem* lhs = nullptr;
-    Lexem* rhs = nullptr;
+struct Value:public Token {
+    int m_value;
+    Value(int value, const std::unordered_map<int, std::string>* map_tostr);
 
-    KeyWord() = delete;
-    KeyWord(int keyword_kind);
-    void print() const override;
-    void print_dot(FILE* dot_file) override;
-    int get_type() const override;
+    Value(Token* token);
+    //void print();
 };
 
-struct Brack:public Lexem {
-    int brack_kind;
+std::vector<Token*> lexer(char* buf);
 
-    Brack() = delete;
-    Brack(int brack);
-    void print() const override;
-    void print_dot(FILE* dot_file) override;
-    int get_type() const override;
-};
+Token* parse_lexem(const std::string lexem, const std::unordered_map<std::string, int>* map);
 
-struct Decl:public Lexem {
-    std::string* decl_;
+std::vector<std::string> extract_lexems(char* buf);
 
-    Decl() = delete;
-    Decl(std::string* decl);
-    void print() const override;
-    void print_dot(FILE* dot_file) override;
-    int get_type() const override;
-};
+std::unordered_map<std::string, int> set_token_types();
 
-struct Value:public Lexem {
-    int value;
-
-    Value() = delete;
-    Value(int val);
-    void print() const override;
-    void print_dot(FILE* dot_file) override;
-    int get_type() const override;
-};
-
-std::vector<Lexem*> lexer(char* buf);
-
-Lexem* parse_token(const std::string token, const std::unordered_map<std::string, int>& map);
-
-std::vector<std::string> extract_tokens(char* buf);
-
-std::unordered_map<std::string, int> set_operations();
-
-void unit_test_1();
-
-void unit_test_2();
-
-void unit_test_3();
-
-void unit_test_4();
-
-void unit_test_5();
-
-void unit_test_6();
-
-void unit_test_7();
+std::unordered_map<int, std::string> set_token_strings();
 
 

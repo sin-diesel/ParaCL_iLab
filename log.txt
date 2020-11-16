@@ -1,174 +1,171 @@
-File size: 113
-Read:113
-Buf:
-while (i < (n_th + 1) * 2) ) {
-    i = i + 1;
-    res = first + second;
-    first = second;
-    second = res;
+
+
+
+ UNIT TEST 1
+
+
+
+ TEST 1 PASSED
+
+
+
+ UNIT TEST 2
+
+
+
+ TEST 2 PASSED
+
+
+
+ UNIT TEST 3
+Running lexer...
+Token: +
+Token: -
+Token: =
+Token: <=
+Token: >
+Token: <
+
+
+
+ TEST 3 PASSED
+
+
+
+ UNIT TEST 4
+Running lexer...
+Lexer is done.
+Token: +
+Token: -
+Token: ==
+Token: ==
+Token: =
+Token: <=
+Token: >
+Token: <
+Token: while
+Token: if
+Token: ?
+Token: =
+
+
+
+ TEST 4 PASSED
+
+
+
+ UNIT TEST 5
+Running lexer...
+Lexer is done.
+Token: if
+Token: (
+Token: )
+Token: ;
+Token: {
+Token: }
+Token: ;
+
+
+
+ TEST 5 PASSED
+
+
+
+ UNIT TEST 6
+Running lexer...
+Lexer is done.
+Token: if
+Token: (
+Token: (
+Token: Identifier
+Token: *
+Token: Value
+Token: +
+Token: Value
+Token: )
+Token: !=
+Token: Identifier
+Token: )
+Token: {
+Token: Identifier
+Token: =
+Token: Identifier
+Token: ;
+Token: Identifier
+Token: =
+Token: ?
+Token: ;
+Token: }
+Token: ;
+
+
+
+ TEST 6 PASSED
+
+
+
+ UNIT TEST 8
+Running lexer...
+Lexer is done.
+Node contains:Token: if
+Node contains:Token: (
+
+
+
+ TEST 8 PASSED
+
+
+
+ UNIT TEST 9
+Running lexer...
+Lexer is done.
+
+
+
+ TEST 9 PASSED
+
+
+
+ UNIT TEST 10
+Running lexer...
+Lexer is done.
+
+
+
+ TEST 10 PASSED
+
+
+
+ Opening test file
+File size: 206
+Read:206
+Buf:n = 0;
+a = 0;
+b = 1;
+x = ?;
+
+while (n < x) {
+  n = n + 1;
+
+  if (n == 1) {
+    print a;
+    }
+
+  if (n == 2) {
+    print b;
+    }
+
+  if (n > 2) {
+    tmp = b;
+    b = a + b;
+    a = tmp;
+    print b;
+  }
 }
 
-print res;
+Running lexer...
+Lexer is done.
 
-Token parsed: while
-Token parsed: (
-Token parsed: i
-Token parsed: <
-Token parsed: n_th
-Token parsed: )
-Token parsed: {
-Token parsed: i
-Token parsed: =
-Token parsed: i
-Token parsed: +
-Token parsed: 1
-Token parsed: ;
-Token parsed: res
-Token parsed: =
-Token parsed: first
-Token parsed: +
-Token parsed: second
-Token parsed: ;
-Token parsed: first
-Token parsed: =
-Token parsed: second
-Token parsed: ;
-Token parsed: second
-Token parsed: =
-Token parsed: res
-Token parsed: ;
-Token parsed: }
-Token parsed: print
-Token parsed: res
-Token parsed: ;
-Token not recognized!
-Number conversion failed:
-Token not recognized!
-Number conversion failed:
-Token not recognized!
-Number conversion failed:
-Token not recognized!
-Number conversion failed:
-Token not recognized!
-Token not recognized!
-Number conversion failed:
-Token not recognized!
-Number conversion failed:
-Token not recognized!
-Number conversion failed:
-Token not recognized!
-Number conversion failed:
-Token not recognized!
-Number conversion failed:
-Token not recognized!
-Number conversion failed:
-Token not recognized!
-Number conversion failed:
-Token not recognized!
-Number conversion failed:
 
-KeyWord lexem: 0x7ff1ff403110
-	type: 19
 
-Brack lexem: 0x7ff1ff402c70
-	type: 26
-
-Decl lexem: 0x7ff1ff402da0
-	type: 2
-Decl is: i
-
-BinOP lexem: 0x7ff1ff403140
-	type: 13
-
-Decl lexem: 0x7ff1ff403190
-	type: 2
-Decl is: n_th
-
-Brack lexem: 0x7ff1ff402dc0
-	type: 27
-
-Brack lexem: 0x7ff1ff400690
-	type: 24
-
-Decl lexem: 0x7ff1ff403210
-	type: 2
-Decl is: i
-
-BinOP lexem: 0x7ff1ff403230
-	type: 8
-
-Decl lexem: 0x7ff1ff403300
-	type: 2
-Decl is: i
-
-BinOP lexem: 0x7ff1ff403320
-	type: 9
-
-Value lexem: 0x7ff1ff403350
-	type: 2
-Value is: 1
-
-KeyWord lexem: 0x7ff1ff403680
-	type: 23
-
-Decl lexem: 0x7ff1ff4036d0
-	type: 2
-Decl is: res
-
-BinOP lexem: 0x7ff1ff4036f0
-	type: 8
-
-Decl lexem: 0x7ff1ff403740
-	type: 2
-Decl is: first
-
-BinOP lexem: 0x7ff1ff403760
-	type: 9
-
-Decl lexem: 0x7ff1ff4031d0
-	type: 2
-Decl is: second
-
-KeyWord lexem: 0x7ff1ff403890
-	type: 23
-
-Decl lexem: 0x7ff1ff4038e0
-	type: 2
-Decl is: first
-
-BinOP lexem: 0x7ff1ff403900
-	type: 8
-
-Decl lexem: 0x7ff1ff403950
-	type: 2
-Decl is: second
-
-KeyWord lexem: 0x7ff1ff403970
-	type: 23
-
-Decl lexem: 0x7ff1ff4039c0
-	type: 2
-Decl is: second
-
-BinOP lexem: 0x7ff1ff4039e0
-	type: 8
-
-Decl lexem: 0x7ff1ff403a30
-	type: 2
-Decl is: res
-
-KeyWord lexem: 0x7ff1ff403a50
-	type: 23
-
-Brack lexem: 0x7ff1ff403a80
-	type: 25
-
-KeyWord lexem: 0x7ff1ff403aa0
-	type: 21
-
-Decl lexem: 0x7ff1ff403af0
-	type: 2
-Decl is: res
-
-KeyWord lexem: 0x7ff1ff403b10
-	type: 23
+ Testing with test file complete

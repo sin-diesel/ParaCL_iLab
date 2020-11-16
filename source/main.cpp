@@ -10,7 +10,10 @@ int main () {
     unit_test_4();
     unit_test_5();
     unit_test_6();
-    unit_test_7();
+    unit_test_8();
+    unit_test_9();
+    unit_test_10();
+    //unit_test_7();
 
     test();
 

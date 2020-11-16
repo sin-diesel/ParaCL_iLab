@@ -1,5 +1,5 @@
 #include "lexer.h"
-#include "parser.h"
+#include "tests.h"
 #include <string>
 #include <string.h>
 #include <iostream>
@@ -8,268 +8,234 @@
 #include <vector>
 #include <unordered_map>
 
-Lexem::Lexem(int kind) {
+
+/* TODO: 1) implement error checking in lexer
+        2) fix unordered map implementation*/
+
+Token::Token(int kind, const std::unordered_map<int, std::string>* map) {
     token_kind = kind;
-}
 
-BinOP::BinOP(int kind):Lexem(BINOP) {
-    binop_kind = kind;
-}
+    if (kind != ID && kind != VALUE) {
+        auto check = map->find(kind);
 
-KeyWord::KeyWord(int kind):Lexem(KEYWORD) {
-    keyword_kind = kind;
-}
-
-Brack::Brack(int kind):Lexem(BRAC) {
-    brack_kind = kind;
-}
-
-Decl::Decl(std::string* decl):Lexem(ID) {
-    decl_ = decl;
-}
-
-Value::Value(int val):Lexem(VALUE) {
-    value = val;
-}
-
-void BinOP::print() const {
-    fprintf(stdout, "\nBinOP lexem: %p\n\ttype: %d\n", this, binop_kind); // fix
-}
-
-int BinOP::get_type() const {
-    return binop_kind;
-}
-
-void BinOP::print_dot(FILE* dot_file) {
-
-    CAST(BinOP, this, lex)
-
-    if (lex->lhs != nullptr) {
-    fprintf (dot_file, "\n\t\t\"%d\"[shape = \"ellipse\", \
-                color=\"#191970\", style=\"filled\", fillcolor = \"#E0FFFF\"];\n" \
-                "\t\t\"%d\"->\"%d\"\n", lex->token_kind, lex->token_kind, (lex->lhs)->token_kind);
-
-    (lex->lhs)->print_dot(dot_file);
-
-    }
-    
-    if (lex->rhs != nullptr) {
-        fprintf (dot_file, "\n\t\t\"%d\"[shape = \"ellipse\", \
-                color=\"#191970\", style=\"filled\", fillcolor = \"#E0FFFF\"];\n" \
-                "\t\t\"%d\"->\"%d\"\n", lex->token_kind, lex->token_kind, (lex->rhs)->token_kind);
-
-        (lex->rhs)->print_dot(dot_file);
+        std::string str = map->at(kind); // here we are sure key exists
+       // std::string* id = new std::string(str);
+        token_str = str;
+    } else if (kind == ID) {
+       // std::string* id = new std::string("Identifier");
+        token_str = "Identifier";
+    } else if (kind == VALUE) {
+        //std::string* value = new std::string("Value");
+        token_str = "Value";
     }
 }
 
-void KeyWord::print() const {
-    fprintf(stdout, "\nKeyWord lexem: %p\n\ttype: %d\n", this, keyword_kind); // fix
+void Token::print() const {
+    std::cout << "Token: " << token_str << std::endl;
 }
 
-void KeyWord::print_dot(FILE* dot_file) {
-
-    CAST(KeyWord, this, lex)
-
-    if (lex->lhs != nullptr) {
-    fprintf (dot_file, "\n\t\t\"%d\"[shape = \"ellipse\", \
-                color=\"#191970\", style=\"filled\", fillcolor = \"#E0FFFF\"];\n" \
-                "\t\t\"%d\"->\"%d\"\n", lex->token_kind, lex->token_kind, (lex->lhs)->token_kind);
-
-    (lex->lhs)->print_dot(dot_file);
-
-    }
-    
-    if (lex->rhs != nullptr) {
-        fprintf (dot_file, "\n\t\t\"%d\"[shape = \"ellipse\", \
-                color=\"#191970\", style=\"filled\", fillcolor = \"#E0FFFF\"];\n" \
-                "\t\t\"%d\"->\"%d\"\n", lex->token_kind, lex->token_kind, (lex->rhs)->token_kind);
-
-        (lex->rhs)->print_dot(dot_file);
-    }
+Token::Token(Token* token) {
+    token_kind = token->token_kind;
+    token_str = token->token_str;
 }
 
-int KeyWord::get_type() const {
-    return keyword_kind;
+Word::Word(std::string word, int token_kind, const std::unordered_map<int, std::string>* map):Token(token_kind, map) {
+    m_word = word;
 }
 
-
-void Brack::print() const {
-    fprintf(stdout, "\nBrack lexem: %p\n\ttype: %d\n", this, brack_kind); // fix
+Word::Word(Token* token) {
+    token_kind = token->token_kind;
+    token_str = token->token_str;
+    Word* word = static_cast<Word*>(token);
+    m_word = word->m_word;
 }
 
-void Brack::print_dot(FILE* dot_file) {
-    return;
+Value::Value(int value, const std::unordered_map<int, std::string>* map):Token(VALUE, map) {
+    m_value = value;
 }
 
-int Brack::get_type() const {
-    return brack_kind;
+Value::Value(Token* token) {
+    token_kind = token->token_kind;
+    token_str = token->token_str;
+    Value* value = static_cast<Value*>(token);
+    m_value = value->m_value;
 }
 
-void Decl::print() const {
-    fprintf(stdout, "\nDecl lexem: %p\n\ttype: %d\n", this, ID); // fix
-    std::cout << "Decl is: " << *decl_ << "\n";
-}
+ //--------------- get lexems in vector
+std::vector<std::string> extract_lexems(char* buf) {
+    std::vector<std::string> lexems;
 
-void Decl::print_dot(FILE* dot_file) {
-    return;
-}
-
-int Decl::get_type() const {
-    return ID;
-}
-
-void Value::print() const {
-    fprintf(stdout, "\nValue lexem: %p\n\ttype: %d\n", this, ID); // fix
-    std::cout << "Value is: " << value << "\n";
-}
-
-void Value::print_dot(FILE* dot_file) {
-    return;
-}
-
-int Value::get_type() const {
-    return value;
-}
-
- //--------------- get tokens in vector
-std::vector<std::string> extract_tokens(char* buf) {
-    std::vector<std::string> tokens;
-
-    //--------------- get single token
+    //--------------- get single lexem
     char* beginning = strtok(buf, " \n");
     int size = strlen(beginning);
-    std::string token(beginning, size);
+    std::string lexem(beginning, size);
 
-    DBG(std::cout << "Token parsed: " << token << std::endl);
-    tokens.push_back(token);
+    DBG(std::cout << "lexem parsed: " << lexem << std::endl);
+    lexems.push_back(lexem);
     
      //--------------- get remaining tokens
     while ((beginning = strtok(NULL, " \n")) != NULL) {
         int size = strlen(beginning);
-        token = std::string(beginning, size);
+        lexem = std::string(beginning, size);
         
-        char sem = token.find(';');   // check for semicolon at the end of a token
-        char lbr = token.find('('); // check for round brackets
-        char rbr = token.find(')');
+        char sem = lexem.find(';');   // check for semicolon at the end of a token
+        char lbr = lexem.find('('); // check for round brackets
+        char rbr = lexem.find(')');
 
-        if (sem != -1 && token.size() > 1) {
-            token = token.substr(0, token.size() - 1);
+        if (sem != -1 && lexem.size() > 1) {
+
+            lexem = lexem.substr(0, lexem.size() - 1);
             std::string semicolon = std::string(";");
-            DBG(std::cout << "Token parsed: " << token << std::endl);
-            DBG(std::cout << "Token parsed: " << semicolon << std::endl);
-            tokens.push_back(token);
-            tokens.push_back(semicolon);
-        } else if (lbr != -1 && token.size() > 1) {
-            token = token.substr(1, token.size() - 1);
+
+            DBG(std::cout << "lexem parsed: " << lexem << std::endl);
+            DBG(std::cout << "lexem parsed: " << semicolon << std::endl);
+
+            lexems.push_back(lexem);
+            lexems.push_back(semicolon);
+        } else if (lbr != -1 && lexem.size() > 1) {
+
+            lexem = lexem.substr(1, lexem.size() - 1);
             std::string lbrac = std::string("(");
-            DBG(std::cout << "Token parsed: " << lbrac << std::endl);
-            DBG(std::cout << "Token parsed: " << token << std::endl);
-            tokens.push_back(lbrac);
-            tokens.push_back(token);
-        } else if (rbr != -1 && token.size() > 1) {
-            token = token.substr(0, token.size() - 1);
+
+            DBG(std::cout << "lexem parsed: " << lbrac << std::endl);
+            DBG(std::cout << "lexem parsed: " << lexem << std::endl);
+
+            lexems.push_back(lbrac);
+            lexems.push_back(lexem);
+        } else if (rbr != -1 && lexem.size() > 1) {
+            
+            lexem = lexem.substr(0, lexem.size() - 1);
             std::string rbrac = std::string(")");
-            DBG(std::cout << "Token parsed: " << token << std::endl);
-            DBG(std::cout << "Token parsed: " << rbrac << std::endl);
-            tokens.push_back(token);
-            tokens.push_back(rbrac);
+
+            DBG(std::cout << "lexem parsed: " << lexem << std::endl);
+            DBG(std::cout << "lexem parsed: " << rbrac << std::endl);
+
+            lexems.push_back(lexem);
+            lexems.push_back(rbrac);
         } else {
-            DBG(std::cout << "Token parsed: " << token << std::endl);
-            tokens.push_back(token);
+            DBG(std::cout << "lexem parsed: " << lexem << std::endl);
+            lexems.push_back(lexem);
         }
     }
-    return tokens;
+    return lexems;
+}
+
+ //--------------- associate string values with corresponding enums
+std::unordered_map<std::string, int> set_token_types() {
+    std::unordered_map<std::string, int> token_types;
+
+    token_types.insert({"+", ADD});
+    token_types.insert({"-", SUB});
+    token_types.insert({"*", MUL});
+    token_types.insert({"/", DIV});
+    token_types.insert({"=", ASSIGN});
+    token_types.insert({"==", EQUAL});
+    token_types.insert({"<", LESS});
+    token_types.insert({">", GREATER});
+    token_types.insert({"<=", LESSEQ});
+    token_types.insert({">=", GREQ});
+    token_types.insert({"!=", NOTEQUAL});
+
+    token_types.insert({"while", WHILE});
+    token_types.insert({"if", IF});
+    token_types.insert({"print", PRINT});
+    token_types.insert({"?", IN});
+    token_types.insert({";", SEMICOL});
+
+    token_types.insert({"(", LBRAC});
+    token_types.insert({")", RBRAC});
+
+    token_types.insert({"{", LSBRAC});
+    token_types.insert({"}", RSBRAC});
+
+    return token_types;
 }
 
  //--------------- associate enum values with corresponding strings
-std::unordered_map<std::string, int> set_operations() {
-    std::unordered_map<std::string, int> operations;
+std::unordered_map<int, std::string> set_token_strings() {
+    std::unordered_map<int, std::string> token_strings;
 
-    operations.insert({"+", ADD});
-    operations.insert({"-", SUB});
-    operations.insert({"*", MUL});
-    operations.insert({"/", DIV});
-    operations.insert({"=", ASSIGN});
-    operations.insert({"==", EQUAL});
-    operations.insert({"<", LESS});
-    operations.insert({">", GREATER});
-    operations.insert({"<=", LESSEQ});
-    operations.insert({">=", GREQ});
-    operations.insert({"!=", GREQ});
+    token_strings.insert({ADD, "+"});
+    token_strings.insert({SUB, "-"});
+    token_strings.insert({MUL, "*"});
+    token_strings.insert({DIV, "/"});
+    token_strings.insert({ASSIGN, "="});
+    token_strings.insert({EQUAL, "=="});
+    token_strings.insert({LESS, "<"});
+    token_strings.insert({GREATER, ">"});
+    token_strings.insert({LESSEQ, "<="});
+    token_strings.insert({GREQ, ">="});
+    token_strings.insert({NOTEQUAL, "!="});
 
-    operations.insert({"while", WHILE});
-    operations.insert({"if", IF});
-    operations.insert({"print", PRINT});
-    operations.insert({"?", IN});
-    operations.insert({";", SEMICOL});
+    token_strings.insert({WHILE, "while"});
+    token_strings.insert({IF, "if"});
+    token_strings.insert({PRINT, "print"});
+    token_strings.insert({IN, "?"});
+    token_strings.insert({SEMICOL, ";"});
 
-    operations.insert({"(", LBRAC});
-    operations.insert({")", RBRAC});
+    token_strings.insert({LBRAC, "("});
+    token_strings.insert({RBRAC, ")"});
 
-    operations.insert({"{", SCOPE_BEG});
-    operations.insert({"}", SCOPE_END});
+    token_strings.insert({LSBRAC, "{"});
+    token_strings.insert({RSBRAC, "}"});
 
-    return operations;
+    return token_strings;
 }
 
- //--------------- parse token and return Lexem*
-Lexem* parse_token(const std::string token, const std::unordered_map<std::string, int>& map) {
-    Lexem* opt = nullptr;
-    int op_kind = -1;
 
-    auto check = map.find(token);
-    if (check == map.end()) {
-        fprintf(stdout, "Token not recognized!\n");
-        op_kind = ID; // possible id
-        //exit(-1);
+ //--------------- parse lexem and return Tokens vector
+Token* parse_lexem(const std::string lexem, const std::unordered_map<std::string, int>* map_toint, \
+                                            const std::unordered_map<int, std::string>* map_tostr) {
+    Token* token = nullptr;
+    int token_kind = -1;
+
+    auto check = map_toint->find(lexem);
+    if (check == map_toint->end()) {
+        token_kind = ID; // possible id
     }
 
-    if (op_kind == -1) {
-        op_kind = map.at(token); // here we are sure that key exists, or it is a possible ID
-    }
-    if (op_kind >= ASSIGN && op_kind <= EQUAL) {
-        BINOP_CREATE(opt, op_kind);
-    } else if (op_kind >= WHILE && op_kind <= SEMICOL) {
-        KWORD_CREATE(opt, op_kind);
-    } else if (op_kind >= SCOPE_BEG && op_kind <= RBRAC) {
-        BRAC_CREATE(opt, op_kind);
+    if (token_kind == -1) {
+        token_kind = map_toint->at(lexem); // here we are sure that key exists, or it is a possible ID
+        token = new Token(token_kind, map_tostr);
     } else {
+
         char* p = nullptr;
-        int num = strtol(token.c_str(), &p, 10); // checking if a number
-        if (num != 0 || *(token.c_str()) == '0') {
-            op_kind = VALUE; // possible value
-            opt = new Value(num);
+        int num = strtol(lexem.c_str(), &p, 10); // checking if a number
+
+        if (num != 0 || *(lexem.c_str()) == '0') {
+            token_kind = VALUE; // possible value
+            token = new Value(num, map_tostr);
         } else {
+
         DBG(fprintf(stdout, "Number conversion failed\n"));
-            std::string* decl = new std::string(token); // declaration
-            
-            op_kind = ID; // possible ID
-            opt = new Decl(decl);
+        //std::string* id = new std::string(lexem); // here we identifited it is an ID
+        token_kind = ID; 
+        token = new Word(lexem, ID, map_tostr);
         }
     }
 
-    assert(opt != nullptr);
-    return opt;
+    assert(token != nullptr);
+    return token;
 }
 
 
 
 //--------------- return vector of lexems
-std::vector<Lexem*> lexer(char* buf) {
+std::vector<Token*> lexer(char* buf) {
     
-    unsigned size = strlen(buf);
-    char* current = buf;
+    std::vector<Token*> tokens;
 
-    std::vector<Lexem*> lexems;
+    std::unordered_map<std::string, int> token_types = set_token_types();
+    std::unordered_map<int, std::string> token_str = set_token_strings();
+    std::vector<std::string> lexems = extract_lexems(buf);
 
-    std::unordered_map<std::string, int> ops = set_operations();
-    std::vector<std::string> tokens = extract_tokens(buf);
-
-    for (int i = 0; i < tokens.size(); ++i) {
-        Lexem* lex = parse_token(tokens[i], ops);
-        lexems.push_back(lex);
+    for (int i = 0; i < lexems.size(); ++i) {
+        Token* token = parse_lexem(lexems[i], &token_types, &token_str);
+        // DBG(std::cout << i << ": ");
+        // DBG(token->print());
+        tokens.push_back(token);
     }
 
-    return lexems;
+    return tokens;
 }
 
