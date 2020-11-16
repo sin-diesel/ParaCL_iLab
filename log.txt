@@ -1,3 +1,142 @@
+
+
+
+ UNIT TEST 1
+
+
+
+ TEST 1 PASSED
+
+
+
+ UNIT TEST 2
+
+
+
+ TEST 2 PASSED
+
+
+
+ UNIT TEST 3
+Running lexer...
+Token: +
+Token: -
+Token: =
+Token: <=
+Token: >
+Token: <
+
+
+
+ TEST 3 PASSED
+
+
+
+ UNIT TEST 4
+Running lexer...
+Lexer is done.
+Token: +
+Token: -
+Token: ==
+Token: ==
+Token: =
+Token: <=
+Token: >
+Token: <
+Token: while
+Token: if
+Token: ?
+Token: =
+
+
+
+ TEST 4 PASSED
+
+
+
+ UNIT TEST 5
+Running lexer...
+Lexer is done.
+Token: if
+Token: (
+Token: )
+Token: ;
+Token: {
+Token: }
+Token: ;
+
+
+
+ TEST 5 PASSED
+
+
+
+ UNIT TEST 6
+Running lexer...
+Lexer is done.
+Token: if
+Token: (
+Token: (
+Token: Identifier
+Token: *
+Token: Value
+Token: +
+Token: Value
+Token: )
+Token: !=
+Token: Identifier
+Token: )
+Token: {
+Token: Identifier
+Token: =
+Token: Identifier
+Token: ;
+Token: Identifier
+Token: =
+Token: ?
+Token: ;
+Token: }
+Token: ;
+
+
+
+ TEST 6 PASSED
+
+
+
+ UNIT TEST 8
+Running lexer...
+Lexer is done.
+Node contains:Token: if
+Node contains:Token: (
+
+
+
+ TEST 8 PASSED
+
+
+
+ UNIT TEST 9
+Running lexer...
+Lexer is done.
+
+
+
+ TEST 9 PASSED
+
+
+
+ UNIT TEST 10
+Running lexer...
+Lexer is done.
+
+
+
+ TEST 10 PASSED
+
+
+
+ Opening test file
 File size: 206
 Read:206
 Buf:n = 0;
@@ -24,210 +163,9 @@ while (n < x) {
   }
 }
 
-Testing lexer...
-lexem parsed: n
-lexem parsed: =
-lexem parsed: 0
-lexem parsed: ;
-lexem parsed: a
-lexem parsed: =
-lexem parsed: 0
-lexem parsed: ;
-lexem parsed: b
-lexem parsed: =
-lexem parsed: 1
-lexem parsed: ;
-lexem parsed: x
-lexem parsed: =
-lexem parsed: ?
-lexem parsed: ;
-lexem parsed: while
-lexem parsed: (
-lexem parsed: n
-lexem parsed: <
-lexem parsed: x
-lexem parsed: )
-lexem parsed: {
-lexem parsed: n
-lexem parsed: =
-lexem parsed: n
-lexem parsed: +
-lexem parsed: 1
-lexem parsed: ;
-lexem parsed: if
-lexem parsed: (
-lexem parsed: n
-lexem parsed: ==
-lexem parsed: 1
-lexem parsed: )
-lexem parsed: {
-lexem parsed: print
-lexem parsed: a
-lexem parsed: ;
-lexem parsed: }
-lexem parsed: if
-lexem parsed: (
-lexem parsed: n
-lexem parsed: ==
-lexem parsed: 2
-lexem parsed: )
-lexem parsed: {
-lexem parsed: print
-lexem parsed: b
-lexem parsed: ;
-lexem parsed: }
-lexem parsed: if
-lexem parsed: (
-lexem parsed: n
-lexem parsed: >
-lexem parsed: 2
-lexem parsed: )
-lexem parsed: {
-lexem parsed: tmp
-lexem parsed: =
-lexem parsed: b
-lexem parsed: ;
-lexem parsed: b
-lexem parsed: =
-lexem parsed: a
-lexem parsed: +
-lexem parsed: b
-lexem parsed: ;
-lexem parsed: a
-lexem parsed: =
-lexem parsed: tmp
-lexem parsed: ;
-lexem parsed: print
-lexem parsed: b
-lexem parsed: ;
-lexem parsed: }
-lexem parsed: }
-lexem not recognized!
-Number conversion failed
-lexem not recognized!
-lexem not recognized!
-Number conversion failed
-lexem not recognized!
-lexem not recognized!
-Number conversion failed
-lexem not recognized!
-lexem not recognized!
-Number conversion failed
-lexem not recognized!
-Number conversion failed
-lexem not recognized!
-Number conversion failed
-lexem not recognized!
-Number conversion failed
-lexem not recognized!
-Number conversion failed
-lexem not recognized!
-lexem not recognized!
-Number conversion failed
-lexem not recognized!
-lexem not recognized!
-Number conversion failed
-lexem not recognized!
-Number conversion failed
-lexem not recognized!
-lexem not recognized!
-Number conversion failed
-lexem not recognized!
-Number conversion failed
-lexem not recognized!
-lexem not recognized!
-Number conversion failed
-lexem not recognized!
-Number conversion failed
-lexem not recognized!
-Number conversion failed
-lexem not recognized!
-Number conversion failed
-lexem not recognized!
-Number conversion failed
-lexem not recognized!
-Number conversion failed
-lexem not recognized!
-Number conversion failed
-lexem not recognized!
-Number conversion failed
-Token: Identifier
-Token: =
-Token: Value
-Token: ;
-Token: Identifier
-Token: =
-Token: Value
-Token: ;
-Token: Identifier
-Token: =
-Token: Value
-Token: ;
-Token: Identifier
-Token: =
-Token: ?
-Token: ;
-Token: while
-Token: (
-Token: Identifier
-Token: <
-Token: Identifier
-Token: )
-Token: {
-Token: Identifier
-Token: =
-Token: Identifier
-Token: +
-Token: Value
-Token: ;
-Token: if
-Token: (
-Token: Identifier
-Token: ==
-Token: Value
-Token: )
-Token: {
-Token: print
-Token: Identifier
-Token: ;
-Token: }
-Token: if
-Token: (
-Token: Identifier
-Token: ==
-Token: Value
-Token: )
-Token: {
-Token: print
-Token: Identifier
-Token: ;
-Token: }
-Token: if
-Token: (
-Token: Identifier
-Token: >
-Token: Value
-Token: )
-Token: {
-Token: Identifier
-Token: =
-Token: Identifier
-Token: ;
-Token: Identifier
-Token: =
-Token: Identifier
-Token: +
-Token: Identifier
-Token: ;
-Token: Identifier
-Token: =
-Token: Identifier
-Token: ;
-Token: print
-Token: Identifier
-Token: ;
-Token: }
-Token: }
-Testing complete.
+Running lexer...
+Lexer is done.
 
 
+
+ Testing with test file complete

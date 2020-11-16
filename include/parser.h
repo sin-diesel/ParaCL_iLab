@@ -7,21 +7,24 @@
 #undef DEBUG
 #endif
 
-#define DEBUG true
+#define DEBUG false
 
 /* ParaCL grammar: 
    Terminals: ASSIGN, ADD, SUB, MUL, DIV, LESS, GREATER, LESEQ,
                GREQ, NOTEQUAL, EQUAL, WHILE, IF, PRINT, IN, LBRAC, RBRAC, RSBRAC, LSBRAC, SEMICOL, ID, VALUE, END
-   Non-terminals: expr, stmt, stmts, factor
-   Productions: expr -> term {+, -} expr | term
+   Non-terminals: expr, stmt, stmts, factor, term
+   Productions: cond -> expr {==, <, >, !=, <=, >=} expr
+                expr -> term {+, -} expr | term
                 term -> factor {*, /} term | factor
                 factor -> ( expr ) | {ID, VALUE} 
                 stmt -> ID = expr ;
-                        | IF ( expr ) stmt
-                        | WHILE (expr) stmt
-                        | { stmts }
-                stmts -> stmt end | stmts
+                        | IF ( cond )  { stmts
+                        | WHILE ( cond ) { stmts
+                        | PRINT ID
+                        | IN
+                stmts -> stmt } | stmts
    */
+
 
 
 struct Node_t {
@@ -61,6 +64,8 @@ Node_t* get_expr(std::vector<Token*> tokens);
 Node_t* get_stmts(std::vector<Token*> tokens);
 
 Node_t* get_factor(std::vector<Token*> tokens);
+
+Node_t* get_cond(std::vector<Token*> tokens);
 
 // Token* get_mult(std::vector<Token*> lexems);
 

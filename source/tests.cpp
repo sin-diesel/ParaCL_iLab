@@ -9,6 +9,8 @@
 #define TEST_BEGIN(num) fprintf(stdout, "\n\n\n UNIT TEST " #num  "\n");
 #define TEST_END(num) fprintf(stdout, "\n\n\n TEST "  #num  " PASSED\n");
 
+extern int next;
+
 void unit_test_1() {
     TEST_BEGIN(1)
     char buf[] = "+ - = <= > <";
@@ -139,20 +141,38 @@ void unit_test_8() {
 
 
 void unit_test_9() {
-    TEST_BEGIN(8)
-    char buf[] = "a + 2 * (4 + 3) ";
+    TEST_BEGIN(9)
+    char buf[] = "a + 2 * (i + i * 1) ";
 
     fprintf(stdout, "Running lexer...\n");
     std::vector<Token*> tokens = lexer(buf);
     fprintf(stdout, "Lexer is done.\n");
 
+    next = 0;
     Node_t* head = get_expr(tokens);
     head->tree_ltraverse();
     TEST_END(9)
 }
 
+void unit_test_10() {
+    TEST_BEGIN(10)
+
+    char buf[] = "i = 0;\nj = 0;\n if (i == j + 1) {\n print i;\n print j;\n}";
+
+    fprintf(stdout, "Running lexer...\n");
+    std::vector<Token*> tokens = lexer(buf);
+    fprintf(stdout, "Lexer is done.\n");
+
+    next = 0;
+    Parse_tree_t tree(tokens);
+    tree.head->tree_ltraverse();
+
+    TEST_END(10)
+}
+
 void test() {
 
+    fprintf(stdout, "\n\n\n Opening test file\n");
     FILE* input = fopen("./tests/001.dat", "rb");
     assert(input != NULL);
 
@@ -169,16 +189,17 @@ void test() {
     assert(read == size);
     fprintf(stdout, "Buf:%s\n", buf);
 
-    std::cout << "Testing lexer..." << std::endl;
+    fprintf(stdout, "Running lexer...\n");
     std::vector<Token*> tokens = lexer(buf);
+    fprintf(stdout, "Lexer is done.\n");
 
-    for (int i = 0; i < tokens.size(); ++i) {
-        tokens[i]->print();
-    }
-
-    std::cout << "Testing complete.\n\n\n";
+    next = 0;
+    Parse_tree_t tree(tokens);
+    tree.head->tree_ltraverse();
 
     fclose(input);
     free(buf);
+
+    fprintf(stdout, "\n\n\n Testing with test file complete\n");
 
 }

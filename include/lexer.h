@@ -10,7 +10,7 @@
 #undef DEBUG
 #endif
 
-#define DEBUG true
+#define DEBUG false
 
 #define DBG(expr) if (DEBUG) {expr;}
 
@@ -21,9 +21,10 @@ ASSIGN, ADD, SUB, MUL, DIV, LESS, GREATER, LESSEQ, GREQ, NOTEQUAL, EQUAL,
 
 WHILE, IF, PRINT, IN,
 
-LBRAC, RBRAC, RSBRAC, LSBRAC, SEMICOL, END
+LBRAC, RBRAC, RSBRAC, LSBRAC, SEMICOL, END, STMT,
 
 };
+
 
 struct Token {
 public:

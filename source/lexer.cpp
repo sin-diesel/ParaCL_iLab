@@ -17,9 +17,6 @@ Token::Token(int kind, const std::unordered_map<int, std::string>* map) {
 
     if (kind != ID && kind != VALUE) {
         auto check = map->find(kind);
-        if (check == map->end()) {
-            fprintf(stdout, "lexem not recognized!\n");
-        }
 
         std::string str = map->at(kind); // here we are sure key exists
        // std::string* id = new std::string(str);
@@ -194,7 +191,6 @@ Token* parse_lexem(const std::string lexem, const std::unordered_map<std::string
 
     auto check = map_toint->find(lexem);
     if (check == map_toint->end()) {
-        fprintf(stdout, "lexem not recognized!\n");
         token_kind = ID; // possible id
     }
 

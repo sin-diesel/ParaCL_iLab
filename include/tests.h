@@ -20,3 +20,5 @@ void unit_test_7();
 void unit_test_8();
 
 void unit_test_9();
+
+void unit_test_10();
